@@ -1,0 +1,9 @@
+*
+
+!.gitignore
+!pyproject.toml
+!poetry.lock
+
+!app.py
+
+*.pyc
