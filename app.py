@@ -1,24 +1,18 @@
-import io
-
 import pandas
 import streamlit as st
-from peatland_time_series import read_time_series, calculate_sy, visualization, filter_sy
+from peatland_time_series import calculate_sy, filter_sy, visualization
+
+from peatland_dashboard import upload
 
 st.set_page_config(layout='wide')
 st.sidebar.title('Peatland analysis')
 
 st.title('Peatland time series analysis')
-uploaded_file = st.file_uploader(
-    label='Upload peatland time series:',
-    type=['csv', 'txt'],
-    accept_multiple_files=False,
-)
+uploaded_file = upload.uploader()
 
 if uploaded_file is not None:
-    bytes_data = uploaded_file.getvalue()
-    file = io.BytesIO(bytes_data)
+    time_series = upload.read_time_series_from_file(uploaded_file)
 
-    time_series = read_time_series(file)
     sy = calculate_sy(time_series)
 
     st.sidebar.header('Sy filter')
@@ -36,7 +30,6 @@ if uploaded_file is not None:
         precipitation_sum_min=precipitation_min,
         precipitation_sum_max=precipitation_max
     )
-
     st.write(sy)
 
     # Remove rows in the Sy Dataframe using indexes

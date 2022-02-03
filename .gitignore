@@ -5,6 +5,9 @@
 !pyproject.toml
 !poetry.lock
 
+!peatland_dashboard/
+!peatland_dashboard/**
+
 !app.py
 
 *.pyc
