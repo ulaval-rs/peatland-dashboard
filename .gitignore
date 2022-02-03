@@ -2,8 +2,7 @@
 
 !.gitignore
 !README.md
-!pyproject.toml
-!poetry.lock
+!requirements.txt
 
 !peatland_dashboard/
 !peatland_dashboard/**
