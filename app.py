@@ -32,6 +32,9 @@ if uploaded_file is not None:
     )
     st.write(sy)
 
+    # Show indexes in Depth graph
+    show_indexes = st.checkbox('Show indexes in Depth plot', False)
+
     # Remove rows in the Sy Dataframe using indexes
     removed_indexes = st.multiselect('Remove rows (by index) when plotting:', options=[i for i in sy.index])
     sy = sy.drop(removed_indexes)
@@ -58,5 +61,5 @@ if uploaded_file is not None:
 
     with col2:
         st.subheader('Depth')
-        fig_depth = visualization.show_depth(sy, show_plot=False)
+        fig_depth = visualization.show_depth(sy, show_plot=False, show_indexes=show_indexes)
         st.pyplot(fig_depth)
