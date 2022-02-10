@@ -1,3 +1,5 @@
+import io
+
 import pandas
 import streamlit as st
 from peatland_time_series import calculate_sy, filter_sy, visualization
@@ -31,6 +33,13 @@ if uploaded_file is not None:
         precipitation_sum_max=precipitation_max
     )
     st.write(sy)
+
+    # Allow the users to download the Sy CSV
+    sy_bytes = io.BytesIO()
+    sy.to_csv(sy_bytes, index=False)
+    sy_bytes.seek(0)
+
+    st.download_button('Download the Sy Dataframe as a CSV', sy_bytes, file_name='sy.csv', mime='text/csv')
 
     # Show indexes in Depth graph
     show_indexes = st.checkbox('Show indexes in Depth plot', False)
