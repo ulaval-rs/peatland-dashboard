@@ -63,7 +63,7 @@ if uploaded_file is not None:
     with st.sidebar.expander('Depth'):
         # Show indexes in Depth graph
         show_indexes = st.checkbox('Show indexes in Depth plot', False)
-        x_lim = st.slider('Limits Sy axis', 0.1, 2.0, value=(0.0, 1.0), step=0.1)
+        x_lim = st.slider('Limits Sy axis', 0.0, 2.0, value=(0.1, 1.0), step=0.1)
         y_lim = st.slider('Limits Depth axis [cm]', -120, 10, value=(-100, 0), step=1)
         as_power_law_axis = st.checkbox('Sy as power law axis', value=False)
         show_equation = st.checkbox('Show equation', value=True)
