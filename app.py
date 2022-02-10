@@ -15,12 +15,20 @@ if uploaded_file is not None:
 
     sy = calculate_sy(time_series)
 
-    st.sidebar.header('Sy filter')
-    sy_min = st.sidebar.number_input('Sy min', value=0.0)
-    sy_max = st.sidebar.number_input('Sy max', value=1)
-    delta_h_min = st.sidebar.number_input('Delta h', value=0.01)
-    precipitation_min = st.sidebar.number_input('Precipitation Sum min', value=10)
-    precipitation_max = st.sidebar.number_input('Precipitation Sum max', value=100)
+    with st.sidebar.expander('General'):
+        delta_h_min = st.number_input('Delta h', value=0.01)
+        sy_min = st.number_input('Sy min', value=0.0)
+        sy_max = st.number_input('Sy max', value=1)
+
+    with st.sidebar.expander('Sy filter'):
+        precipitation_min = st.number_input('Precipitation Sum min', value=10)
+        precipitation_max = st.number_input('Precipitation Sum max', value=100)
+        depth_min = st.number_input('Depth min [m]', value=0)
+        depth_max = st.number_input('Depth max [m]', value=100)
+        date_beginning_min = st.date_input('Date beginning min', value=sy['date_beginning'].min())
+        date_beginning_max = st.date_input('Date beginning max', value=sy['date_beginning'].max())
+        date_ending_min = st.date_input('Date ending min', value=sy['date_ending'].min())
+        date_ending_max = st.date_input('Date ending max', value=sy['date_ending'].max())
 
     sy = filter_sy(
         sy=sy,
@@ -28,7 +36,13 @@ if uploaded_file is not None:
         sy_max=sy_max,
         delta_h_min=delta_h_min,
         precipitation_sum_min=precipitation_min,
-        precipitation_sum_max=precipitation_max
+        precipitation_sum_max=precipitation_max,
+        depth_min=depth_min,
+        depth_max=depth_max,
+        date_beginning_min=pandas.Timestamp(date_beginning_min),
+        date_beginning_max=pandas.Timestamp(date_beginning_max),
+        date_ending_min=pandas.Timestamp(date_ending_min),
+        date_ending_max=pandas.Timestamp(date_ending_max),
     )
     st.write(sy)
 
@@ -42,16 +56,20 @@ if uploaded_file is not None:
     removed_indexes = st.multiselect('Remove rows (by index) when plotting:', options=[i for i in sy.index])
     sy = sy.drop(removed_indexes)
 
-    st.sidebar.header('Water level')
-    event_index = st.sidebar.slider('Event Index', 0, len(sy), 10)
-    hour_before = st.sidebar.slider('Hour before', 0, 100, 10)
-    hour_after = st.sidebar.slider('Hour after', 0, 100, 20)
+    st.sidebar.header('Plots')
+    with st.sidebar.expander('Water level'):
+        event_index = st.slider('Event Index', 0, len(sy), 10)
+        hour_before = st.slider('Hour before', 0, 100, 10)
+        hour_after = st.slider('Hour after', 0, 100, 20)
+
+    with st.sidebar.expander('Depth'):
+        pass
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.subheader('Water level in function of time')
-        st.markdown('##')
+        st.markdown('##')  # Simply making a space
         fig_water_level = visualization.show_water_level(
             time_series=time_series,
             sy=sy,
