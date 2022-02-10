@@ -50,9 +50,6 @@ if uploaded_file is not None:
     # Allow the users to download the Sy CSV
     download.make_download_button(sy)
 
-    # Show indexes in Depth graph
-    show_indexes = st.checkbox('Show indexes in Depth plot', False)
-
     # Remove rows in the Sy Dataframe using indexes
     removed_indexes = st.multiselect('Remove rows (by index) when plotting:', options=[i for i in sy.index])
     sy = sy.drop(removed_indexes)
@@ -64,8 +61,12 @@ if uploaded_file is not None:
         hour_after = st.slider('Hour after', 0, 100, 20)
 
     with st.sidebar.expander('Depth'):
-        x_lim = st.slider('Limits Sy axis', 0.0, 2.0, value=(0.0, 1.0), step=0.1)
-        y_lim = st.slider('Limits Depth axis [cm]', -200, 10, value=(-100, 0), step=1)
+        # Show indexes in Depth graph
+        show_indexes = st.checkbox('Show indexes in Depth plot', False)
+        x_lim = st.slider('Limits Sy axis', 0.1, 2.0, value=(0.0, 1.0), step=0.1)
+        y_lim = st.slider('Limits Depth axis [cm]', -120, 10, value=(-100, 0), step=1)
+        as_power_law_axis = st.checkbox('Sy as power law axis', value=False)
+        show_equation = st.checkbox('Show equation', value=True)
 
     col1, col2 = st.columns(2)
 
@@ -84,8 +85,13 @@ if uploaded_file is not None:
 
     with col2:
         st.subheader('Depth')
-        fig_depth = visualization.show_depth(sy, show_plot=False, show_indexes=show_indexes)
+        fig_depth = visualization.show_depth(
+            sy,
+            show_plot=False,
+            show_indexes=show_indexes,
+            x_limits=x_lim, y_limits=y_lim,
+            show_legend=show_equation,
+            power_law_x_axis=as_power_law_axis
+        )
 
-        plt.xlim(x_lim[0], x_lim[1])
-        plt.ylim(y_lim[0], y_lim[1])
         st.pyplot(fig_depth)
