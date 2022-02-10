@@ -1,10 +1,8 @@
-import io
-
 import pandas
 import streamlit as st
 from peatland_time_series import calculate_sy, filter_sy, visualization
 
-from peatland_dashboard import upload
+from peatland_dashboard import download, upload
 
 st.set_page_config(layout='wide')
 st.sidebar.title('Peatland analysis')
@@ -35,11 +33,7 @@ if uploaded_file is not None:
     st.write(sy)
 
     # Allow the users to download the Sy CSV
-    sy_bytes = io.BytesIO()
-    sy.to_csv(sy_bytes, index=False)
-    sy_bytes.seek(0)
-
-    st.download_button('Download the Sy Dataframe as a CSV', sy_bytes, file_name='sy.csv', mime='text/csv')
+    download.make_download_button(sy)
 
     # Show indexes in Depth graph
     show_indexes = st.checkbox('Show indexes in Depth plot', False)
