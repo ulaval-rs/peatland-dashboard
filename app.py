@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import pandas
 import streamlit as st
 from peatland_time_series import calculate_sy, filter_sy, visualization
@@ -63,7 +64,8 @@ if uploaded_file is not None:
         hour_after = st.slider('Hour after', 0, 100, 20)
 
     with st.sidebar.expander('Depth'):
-        pass
+        x_lim = st.slider('Limits Sy axis', 0.0, 2.0, value=(0.0, 1.0), step=0.1)
+        y_lim = st.slider('Limits Depth axis [cm]', -200, 10, value=(-100, 0), step=1)
 
     col1, col2 = st.columns(2)
 
@@ -83,4 +85,7 @@ if uploaded_file is not None:
     with col2:
         st.subheader('Depth')
         fig_depth = visualization.show_depth(sy, show_plot=False, show_indexes=show_indexes)
+
+        plt.xlim(x_lim[0], x_lim[1])
+        plt.ylim(y_lim[0], y_lim[1])
         st.pyplot(fig_depth)
