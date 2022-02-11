@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import pandas
 import streamlit as st
 from peatland_time_series import calculate_sy, filter_sy, visualization
@@ -56,7 +55,7 @@ if uploaded_file is not None:
 
     st.sidebar.header('Plots')
     with st.sidebar.expander('Water level'):
-        event_index = st.slider('Event Index', 0, len(sy), 10)
+        event_index = st.select_slider('Event Index', options=sy.index)
         hour_before = st.slider('Hour before', 0, 100, 10)
         hour_after = st.slider('Hour after', 0, 100, 20)
 
@@ -64,7 +63,7 @@ if uploaded_file is not None:
         # Show indexes in Depth graph
         show_indexes = st.checkbox('Show indexes in Depth plot', False)
         x_lim = st.slider('Limits Sy axis', 0.0, 2.0, value=(0.1, 1.0), step=0.1)
-        y_lim = st.slider('Limits Depth axis [cm]', -120, 10, value=(-100, 0), step=1)
+        y_lim = st.slider('Limits Depth axis [cm]', -120, 20, value=(-100, 0), step=1)
         as_power_law_axis = st.checkbox('Sy as power law axis', value=False)
         show_equation = st.checkbox('Show equation', value=True)
 

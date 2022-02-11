@@ -54,7 +54,7 @@ pandas==1.4.0
 pandocfilters==1.5.0
 parso==0.8.3
 pathspec==0.9.0
-peatland-time-series==0.1.6
+peatland-time-series==0.1.7
 pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==9.0.1
