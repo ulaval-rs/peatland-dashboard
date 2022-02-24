@@ -36,7 +36,7 @@ if uploaded_file is not None:
         precipitation_sum = st.select_slider(
             label='Precipitation Sum',
             options=round_values(sy['precipitation_sum'].dropna().sort_values()),
-            value=(round_values(sy['precipitation_sum'].min()), round_values(sy['precipitation_sum'].max()))
+            value=(5, 40)
         )
         depth = st.select_slider(
             label='Mean depth [m]',
