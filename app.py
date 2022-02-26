@@ -3,9 +3,22 @@ import streamlit as st
 from peatland_time_series import calculate_sy, filter_sy, visualization
 
 from peatland_dashboard import download, upload
-from peatland_dashboard.util import round_values
 
 st.set_page_config(layout='wide')
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+        width: 28em;
+    }
+    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+        width: 28em;
+        margin-left: -28em;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 st.sidebar.title('Peatland analysis')
 
 st.title('Peatland time series analysis')
@@ -23,55 +36,43 @@ if uploaded_file is not None:
     sy = calculate_sy(time_series, gap=int(gap), max_hour=int(max_hour), threshold=threshold, resample=resample)
 
     with st.sidebar.expander('Filters'):
-        delta_h = st.select_slider(
-            label='Delta h',
-            options=round_values(sy['delta_h'].dropna().sort_values()),
-            value=(round_values(sy['delta_h'].min()), round_values(sy['delta_h'].max()))
-        )
-        sy_min_max = st.select_slider(
-            label='Sy value',
-            options=round_values(sy['sy'].dropna().sort_values()),
-            value=(round_values(sy['sy'].min()), round_values(sy['sy'].max()))
-        )
-        precipitation_sum = st.select_slider(
-            label='Precipitation Sum',
-            options=round_values(sy['precipitation_sum'].dropna().sort_values()),
-            value=(5, 40)
-        )
-        depth = st.select_slider(
-            label='Mean depth [m]',
-            options=round_values(sy['depth'].dropna().sort_values()),
-            value=(round_values(sy['depth'].min()), round_values(sy['depth'].max()))
-        )
-        durations = st.select_slider(
-            label='Durations',
-            options=round_values(sy['durations'].dropna().sort_values()),
-            value=(round_values(sy['durations'].min()), round_values(sy['durations'].max()))
-        )
-        intensities = st.select_slider(
-            label='Intensities',
-            options=round_values(sy['intensities'].dropna().sort_values()),
-            value=(round_values(sy['intensities'].min()), round_values(sy['intensities'].max()))
-        )
-        date_beginning = st.select_slider('Date beginning', options=sy['date_beginning'].sort_values(), value=(sy['date_beginning'].min(), sy['date_beginning'].max()))
-        date_ending = st.select_slider('Date ending', options=sy['date_ending'].sort_values(), value=(sy['date_ending'].min(), sy['date_ending'].max()))
+        col1, col2 = st.columns(2)
+        with col1:
+            delta_h_min = st.number_input(label='Delta h min', value=0.01)
+            sy_min = st.number_input(label='Sy value min', value=0.01)
+            precipitation_sum_min = st.number_input(label='Precipitation Sum min', value=5.0)
+            depth_min = st.number_input(label='Mean depth [m] min', value=-1.0)
+            durations_min = st.number_input(label='Durations min', value=0.0)
+            intensities_min = st.number_input(label='Intensities min', value=0.0)
+            date_beginning_min = st.date_input(label='Date beginning min', value=sy['date_beginning'].min())
+            date_ending_min = st.date_input(label='Date ending min', value=sy['date_ending'].min())
+
+        with col2:
+            delta_h_max = st.number_input(label='Delta h max', value=20.0)
+            sy_max = st.number_input(label='Sy value max', value=1.0, step=0.1)
+            precipitation_sum_max = st.number_input(label='Precipitation Sum max', value=40.0)
+            depth_max = st.number_input(label='Mean depth [m] max', value=0.2)
+            durations_max = st.number_input(label='Durations max', value=10.0)
+            intensities_max = st.number_input(label='Intensities max', value=10.0)
+            date_beginning_max = st.date_input(label='Date beginning max', value=sy['date_beginning'].max())
+            date_ending_max = st.date_input(label='Date ending max', value=sy['date_ending'].max())
 
     sy = filter_sy(
         sy=sy,
-        sy_min=sy_min_max[0],
-        sy_max=sy_min_max[1],
-        delta_h_min=delta_h[0],
-        delta_h_max=delta_h[1],
-        precipitation_sum_min=precipitation_sum[0],
-        precipitation_sum_max=precipitation_sum[1],
-        depth_min=depth[0],
-        depth_max=depth[1],
-        intensities_min=intensities[0],
-        intensities_max=intensities[1],
-        date_beginning_min=pandas.Timestamp(date_beginning[0]),
-        date_beginning_max=pandas.Timestamp(date_beginning[1]),
-        date_ending_min=pandas.Timestamp(date_ending[0]),
-        date_ending_max=pandas.Timestamp(date_ending[1]),
+        sy_min=sy_min,
+        sy_max=sy_max,
+        delta_h_min=delta_h_min,
+        delta_h_max=delta_h_max,
+        precipitation_sum_min=precipitation_sum_min,
+        precipitation_sum_max=precipitation_sum_max,
+        depth_min=depth_min,
+        depth_max=depth_max,
+        intensities_min=intensities_min,
+        intensities_max=intensities_max,
+        date_beginning_min=pandas.Timestamp(date_beginning_min),
+        date_beginning_max=pandas.Timestamp(date_beginning_max),
+        date_ending_min=pandas.Timestamp(date_ending_min),
+        date_ending_max=pandas.Timestamp(date_ending_max),
     )
     st.write(sy)
 
@@ -92,7 +93,7 @@ if uploaded_file is not None:
         # Show indexes in Depth graph
         show_indexes = st.checkbox('Show indexes in Depth plot', False)
         use_min_depth = st.checkbox('Use min depth rather than mean depth', True)
-        x_lim = st.slider('Limits Sy axis', 0.0, 2.0, value=(0.1, 1.0), step=0.1)
+        x_lim = st.slider('Limits Sy axis', 0.0, 2.0, value=(0.01, 1.0), step=0.1)
         y_lim = st.slider('Limits Depth axis [cm]', -120, 20, value=(-100, 0), step=1)
         as_power_law_axis = st.checkbox('Sy as power law axis', value=False)
         show_equation = st.checkbox('Show equation', value=True)
@@ -125,3 +126,4 @@ if uploaded_file is not None:
         )
 
         st.pyplot(fig_depth)
+
