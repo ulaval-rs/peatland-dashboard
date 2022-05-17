@@ -98,32 +98,32 @@ if uploaded_file is not None:
         as_power_law_axis = st.checkbox('Sy as power law axis', value=False)
         show_equation = st.checkbox('Show equation', value=True)
 
-    col1, col2 = st.columns(2)
+#    col1, col2 = st.columns(2)
 
-    with col1:
-        st.subheader('Water level in function of time')
-        st.markdown('##')  # Simply making a space
-        fig_water_level = visualization.show_water_level(
-            time_series=time_series,
-            sy=sy,
-            event_index=event_index,
-            time_before=pandas.Timedelta(hours=hour_before),
-            time_after=pandas.Timedelta(hours=hour_after),
-            show_plot=False
-        )
-        st.pyplot(fig_water_level)
+#    with col1:
+#    st.subheader('Water level in function of time')
+#    st.markdown('##')  # Simply making a space
+#    fig_water_level = visualization.show_water_level(
+#        time_series=time_series,
+#        sy=sy,
+#        event_index=event_index,
+#        time_before=pandas.Timedelta(hours=hour_before),
+#        time_after=pandas.Timedelta(hours=hour_after),
+#        show_plot=False
+#    )
+#    st.pyplot(fig_water_level)
 
-    with col2:
-        st.subheader('Depth')
-        fig_depth = visualization.show_depth(
-            sy,
-            use_min_depth=use_min_depth,
-            show_plot=False,
-            show_indexes=show_indexes,
-            x_limits=x_lim, y_limits=y_lim,
-            show_legend=show_equation,
-            power_law_x_axis=as_power_law_axis
-        )
+#    with col2:
+    st.subheader('Depth')
+    fig_depth = visualization.show_depth(
+        sy,
+        use_min_depth=use_min_depth,
+        show_plot=False,
+        show_indexes=show_indexes,
+        x_limits=x_lim, y_limits=y_lim,
+        show_legend=show_equation,
+        power_law_x_axis=as_power_law_axis
+    )
 
-        st.pyplot(fig_depth)
+    st.pyplot(fig_depth)
 
