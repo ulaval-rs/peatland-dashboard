@@ -1,6 +1,9 @@
+import os
+import pathlib
+
 import pandas
 import streamlit as st
-from peatland_time_series import calculate_sy, filter_sy, visualization
+from peatland_time_series import calculate_sy, filter_sy, visualization, read_time_series
 
 from peatland_dashboard import download, upload
 
@@ -24,8 +27,21 @@ st.sidebar.title('Peatland analysis')
 st.title('Peatland time series analysis')
 uploaded_file = upload.uploader()
 
-if uploaded_file is not None:
+time_series = None
+
+placeholder = st.empty()
+or_header = placeholder.subheader('Or')
+default_button = placeholder.button(label='Load default data')
+
+if default_button:
+    data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'peatland_dashboard', 'data', 'default.csv')
+    time_series = read_time_series(data_path)
+
+elif uploaded_file is not None:
     time_series = upload.read_time_series_from_file(uploaded_file)
+
+if time_series is not None:
+    placeholder.empty()
 
     with st.sidebar.expander('Hyperparameters'):
         gap = st.number_input('Gap', value=5)
