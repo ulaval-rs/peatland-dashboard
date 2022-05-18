@@ -1,5 +1,4 @@
 import os
-import pathlib
 
 import pandas
 import streamlit as st
@@ -7,6 +6,11 @@ from peatland_time_series import calculate_sy, filter_sy, visualization, read_ti
 
 from peatland_dashboard import download, upload
 
+# Session state
+if 'time_series' not in st.session_state:
+    st.session_state['time_series'] = None
+
+# App
 st.set_page_config(layout='wide')
 st.markdown(
     """
@@ -27,18 +31,16 @@ st.sidebar.title('Peatland analysis')
 st.title('Peatland time series analysis')
 uploaded_file = upload.uploader()
 
-time_series = None
-
 placeholder = st.empty()
-or_header = placeholder.subheader('Or')
-default_button = placeholder.button(label='Load default data')
+default_button = placeholder.button(label='Or load default data')
 
 if default_button:
     data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'peatland_dashboard', 'data', 'default.csv')
-    time_series = read_time_series(data_path)
-
+    st.session_state['time_series'] = read_time_series(data_path)
 elif uploaded_file is not None:
-    time_series = upload.read_time_series_from_file(uploaded_file)
+    st.session_state['time_series'] = upload.read_time_series_from_file(uploaded_file)
+
+time_series = st.session_state['time_series']
 
 if time_series is not None:
     placeholder.empty()
