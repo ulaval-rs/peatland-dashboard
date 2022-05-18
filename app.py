@@ -74,7 +74,7 @@ if uploaded_file is not None:
         date_ending_min=pandas.Timestamp(date_ending_min),
         date_ending_max=pandas.Timestamp(date_ending_max),
     )
-    st.write(sy)
+    st.dataframe(sy, height=150)
 
     # Allow the users to download the Sy CSV
     download.make_download_button(sy)
